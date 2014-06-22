@@ -1,0 +1,59 @@
+<html>
+  <body>
+    <script>
+
+var DemoTodoListProto = Object.create(HTMLElement.prototype);
+
+// Add an item to the todo list
+DemoTodoListProto.add = function (attrs) {
+  var item = document.createElement('demo-todo-item');
+  item.assign(attrs);
+  this.list.appendChild(item);
+};
+
+// Remove an item from the todo list
+DemoTodoListProto.remove = function (id) {
+  var el = this.list.querySelector('todo-' + id);
+  this.list.removeChild(el);
+};
+
+// `createdCallback` is called when the custom element is created. We can use
+// it to set up events and build up the shadow DOM
+DemoTodoListProto.createdCallback = function () {
+  var shadow = this.createShadowRoot();
+
+  shadow.innerHTML = [
+    '<ul></ul>',
+    '<form>',
+      '<input pattern=".{1,}" required type="text" placeholder="Eat a peach..." />',
+      '<button>Add TODO</button>',
+    '</form>'
+  ].join('');
+
+  this.list = shadow.getElementsByTagName('ul')[0];
+
+
+  // Listen for form submission. In a non-trivial usage, we might need to do
+  // some cleanup when the element is `detached`
+  shadow.querySelector('form').addEventListener('submit', function (e) {
+    var input = shadow.querySelector('input');
+    e.preventDefault();
+
+    // Minimal view-level validation
+    this.dispatchEvent(new CustomEvent('itemRequest', {
+      detail: {
+        label: input.value
+      }
+    }));
+    input.value = '';
+  }.bind(this));
+};
+
+document.registerElement('demo-todo-list', {
+  prototype: DemoTodoListProto
+});
+
+    </script>
+  </body>
+</html>
+

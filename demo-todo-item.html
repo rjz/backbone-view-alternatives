@@ -1,0 +1,79 @@
+<html>
+  <head>
+    <style>
+      demo-todo-item {
+        display:block;
+        list-style: disc;
+      }
+
+      demo-todo-item.completed {
+        color:gray;
+        font-style:italic;
+      }
+    </style>
+
+  </head>
+  <body>
+    <script>
+var DemoTodoItemProto = Object.create(HTMLElement.prototype);
+
+// `createdCallback` is called when the custom element is created. We can use
+// it to set up events and build up the shadow DOM
+DemoTodoItemProto.createdCallback = function () {
+
+  // Initialize shadow DOM
+  var shadow = this.createShadowRoot();
+
+  // Prepare a couple of child elements
+  var els = this.els = {
+    input: document.createElement('input'),
+    label: document.createElement('label')
+  };
+
+  els.input.setAttribute('type', 'checkbox');
+
+  // Listen for checkbox changes. In a non-trivial usage, we might need to do
+  // some cleanup when the element is `detached`
+  els.input.addEventListener('change', function (e) {
+
+    // `className` plays marginally better with CSS style selection in current
+    // webkit browsers. It would be better to use a dedicated attribute here
+    if (this.className !== 'completed') {
+
+      this.className = 'completed';
+
+      // Disable the completed item and inform any interested parties
+      e.target.setAttribute('disabled', 'disabled');
+      this.dispatchEvent(new CustomEvent('completed', {
+        detail: {
+          id: this.getAttribute('id').split('todo-').pop()
+        }
+      }));
+    }
+  }.bind(this));
+
+  // Add the children to the shadow DOM
+  shadow.appendChild(els.input);
+  shadow.appendChild(els.label);
+};
+
+// Assign model properties to this view
+DemoTodoItemProto.assign = function (attrs) {
+
+  // Set the (prefixed) id of the todo item
+  this.setAttribute('id', 'todo-' + attrs.id);
+
+  // Set up label / input fields inside the shadow DOM
+  this.els.input.setAttribute('id', attrs.id);
+  this.els.label.setAttribute('for', attrs.id);
+  this.els.label.textContent = attrs.label;
+};
+
+document.registerElement('demo-todo-item', {
+  prototype: DemoTodoItemProto
+});
+
+    </script>
+  </body>
+</html>
+

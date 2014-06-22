@@ -1,0 +1,21 @@
+{
+  "name": "backbone-web-components-todo-list-example",
+  "version": "0.0.1",
+  "authors": [
+    "rjz <rj@rjzaworski.com>"
+  ],
+  "license": "WTFPL",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#~0.3.3",
+    "core-elements": "Polymer/core-elements#~0.3.3",
+    "backbone": "~1.1.2",
+    "zepto": "~1.1.3"
+  }
+}

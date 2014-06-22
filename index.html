@@ -1,0 +1,23 @@
+<!doctype html>
+<html>
+  <head>
+    <!-- super-heavy, lazy pass at Backbone dependencies + polymer polyfill -->
+    <script src="bower_components/platform/platform.js"></script>
+    <script src="bower_components/zepto/zepto.js"></script>
+    <script src="bower_components/underscore/underscore.js"></script>
+    <script src="bower_components/backbone/backbone.js"></script>
+    <link rel="import" href="bower_components/core-ajax/core-ajax.html" />
+    <link rel="import" href="demo-todo-item.html" />
+    <link rel="import" href="demo-todo-list.html" />
+  </head>
+  <body>
+    <h1>Things to do.</h1>
+
+    <!-- The root element of the todo list component -->
+    <demo-todo-list></demo-todo-list>
+
+    <!-- Our TODO application -->
+    <script src="app.js"></script>
+  </body>
+</html>
+
