@@ -7,7 +7,7 @@ frameworks.
 
     $ bower install && python -mSimpleHTTPServer
 
-Then browse to [http://localhost:8000]
+Then browse to [localhost:8000](http://localhost:8000)
 
 ## License
 
