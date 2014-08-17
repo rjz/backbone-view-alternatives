@@ -1,17 +1,5 @@
 window.addEventListener('polymer-ready', function(e) {
 
-  // A simple model; uses the `cid` instead of the `id` to avoid
-  // having to deal with persistence. For now.
-  var Todo = Backbone.Model.extend({
-    toJSON: function () {
-      return _.defaults({ id: this.cid }, this.attributes);
-    }
-  });
-
-  var Todos = Backbone.Collection.extend({
-    model: Todo
-  });
-
   // Create a todo list
   var todos = new Todos();
 
