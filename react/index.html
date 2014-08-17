@@ -6,91 +6,13 @@
     <script src="../bower_components/zepto/zepto.js"></script>
     <script src="../bower_components/underscore/underscore.js"></script>
     <script src="../bower_components/backbone/backbone.js"></script>
+
+    <script src="backbone-react-mixins.js"></script>
+    <script src="model.js"></script>
+    <script src="app.jsx" type="text/jsx"></script>
   </head>
   <body>
-    <div id="example"></div>
-    <script>
-// A simple model; uses the `cid` instead of the `id` to avoid
-// having to deal with persistence. For now.
-var Todo = Backbone.Model.extend({
-  defaults: {
-    label: ''
-  },
-  toJSON: function () {
-    return _.defaults({ id: this.id }, this.attributes);
-  }
-});
-
-var Todos = Backbone.Collection.extend({
-  url: './todos.json',
-  model: Todo
-});
-
-    </script>
-
-    <script type="text/jsx">
-    /** @jsx React.DOM */
-
-    var TodoView = React.createClass({
-      getInitialState: function () {
-        return _.result(Todo.prototype, 'defaults');
-      },
-      render: function() {
-        return (
-          <li>
-            <input type="checkbox" id={"todo-" + this.props.key} />
-            <label htmlFor={"todo-" + this.props.key}>{this.props.children}</label>
-          </li>
-        );
-      }
-    });
-
-    var TodoListView = React.createClass({
-      serializeCollection: function () {
-        this.setState({ todos: this.todos.toJSON() });
-      },
-      getInitialState: function () {
-        this.todos = new Todos();
-        this.todos.on('add remove reset', this.serializeCollection);
-        return { todos: this.todos.toJSON() };
-      },
-      componentDidMount: function () {
-        this.todos.fetch({
-          success: this.serializeCollection,
-          error: function () {
-            alert('Failed fetching TODOs!');
-          }
-        });
-      },
-      onSubmit: function (e) {
-        e.preventDefault();
-        this.todos.create({
-          label: this.refs.todo.getDOMNode().value.trim()
-        });
-      },
-      render: function () {
-        var todoNodes = this.state.todos.map(function (todo) {
-          return (
-            <TodoView key={todo.id}>{todo.label}</TodoView>
-          );
-        });
-        return (
-          <div>
-          <ul>{todoNodes}</ul>
-          <form onSubmit={this.onSubmit}>
-            <input pattern=".{1,}" required ref="todo" type="text" placeholder="Eat a peach..." />
-            <button>Add TODO</button>
-          </form>
-          </div>
-        );
-      }
-    });
-
-    React.renderComponent(
-      <TodoListView></TodoListView>,
-      document.getElementById('example')
-    );
-    </script>
+    <div id="root"></div>
   </body>
 </html>
 
