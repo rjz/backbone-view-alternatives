@@ -1,4 +1,4 @@
-# Backbone / other views
+# Backbone View Alternatives
 
 **Work in progress**
 
