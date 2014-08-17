@@ -1,0 +1,22 @@
+@import url(http://fonts.googleapis.com/css?family=Questrial);
+
+body {
+  font-family: 'Questrial', sans-serif;
+}
+
+demo-todo-list {
+  display:block;
+}
+
+demo-todo-list::shadow demo-todo-item {
+  display: list-item;
+}
+
+demo-todo-list::shadow demo-todo-item::shadow input:disabled {
+  border: 1px solid red;
+}
+
+demo-todo-list::shadow demo-todo-item::shadow input:disabled + label {
+  text-decoration: line-through;
+}
+
