@@ -1,13 +1,10 @@
 window.addEventListener('polymer-ready', function(e) {
 
-  // Create a todo list
-  var todos = new Todos();
-
   // Create a list element
   var todoListEl = document.querySelector('demo-todo-list');
 
   // Add models to the list element as they're added to the collection
-  todos.on('add', function (m) {
+  todoStore.on('add', function (m) {
     todoListEl.add(m.toJSON());
   });
 
@@ -16,24 +13,19 @@ window.addEventListener('polymer-ready', function(e) {
   todoListEl.addEventListener('itemRequest', function (e) {
 
     // `create` could be used to persist
-    todos.add({ label: e.detail.label });
+    todoStore.create({ label: e.detail.label });
   });
 
   // A todo has been completed! The view is already updated to reflect this;
   // we simply need to `remove` the model from the collection.
   todoListEl.addEventListener('completed', function (e) {
+    var modelId = e.detail.id;
 
     // find the model by the event id
-    var m = todos.get(e.detail.id);
-
-    // `destroy` could be used to persist
-    todos.remove(m);
+    todoStore.get(modelId).save({ completed: true });
   });
 
-  // Prepopulate the list with a few things to do
-  [
-    { label: 'Reach for the sky' },
-    { label: 'Win, lose or draw' }
-  ].forEach(todos.add.bind(todos));
+  todoStore.fetch();
+
 });
 

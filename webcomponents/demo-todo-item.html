@@ -1,18 +1,4 @@
 <html>
-  <head>
-    <style>
-      demo-todo-item {
-        display:block;
-        list-style: disc;
-      }
-
-      demo-todo-item.completed {
-        color:gray;
-        font-style:italic;
-      }
-    </style>
-
-  </head>
   <body>
     <script>
 var DemoTodoItemProto = Object.create(HTMLElement.prototype);
@@ -67,6 +53,11 @@ DemoTodoItemProto.assign = function (attrs) {
   this.els.input.setAttribute('id', attrs.id);
   this.els.label.setAttribute('for', attrs.id);
   this.els.label.textContent = attrs.label;
+
+  if (attrs.completed) {
+    this.els.input.setAttribute('disabled', 'disabled');
+    this.els.input.setAttribute('checked', 'checked');
+  }
 };
 
 document.registerElement('demo-todo-item', {
