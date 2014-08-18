@@ -1,87 +1,72 @@
 /** @jsx React.DOM */
 
+var BackboneCollection = {
+
+  bindCollection: function (collectionRef) {
+    var boundAssignment = this.assignCollection.bind(this, collectionRef);
+    collectionRef.on('change add remove reset', boundAssignment);
+  },
+
+  unbindCollection: function (collectionRef) {
+    collectionRef.off();
+  },
+
+  serializeCollection: function (collectionRef, options) {
+    return { collection: collectionRef.toJSON(options) };
+  },
+
+  assignCollection: function (collectionRef, options) {
+    this.setState(this.serializeCollection(collectionRef, options));
+  }
+};
+
 // Example: React on the outside, Backbone on the inside
-
-var TodoView = React.createClass({
-  getInitialState: function () {
-    return _.result(Todo.prototype, 'defaults');
-  },
-  render: function() {
-    return (
-      <li>
-        <input type="checkbox" id={"todo-" + this.props.key} />
-        <label htmlFor={"todo-" + this.props.key}>{this.props.children}</label>
-      </li>
-    );
-  }
-});
-
-var TodoListView = React.createClass({
-  render: function () {
-    var todoNodes = this.props.todos.map(function (todo) {
-      return (
-        <TodoView key={todo.id}>{todo.label}</TodoView>
-      );
-    });
-    return (
-      <ul>{todoNodes}</ul>
-    );
-  }
-});
-
-var TodoSubmitView = React.createClass({
-
-  onSubmit: function (e) {
-    e.preventDefault();
-    this.props.onSubmit({
-      label: this.refs.todo.getDOMNode().value.trim()
-    });
-    this.refs.todo.getDOMNode().value = '';
-  },
-
-  render: function () {
-    return (
-      <form onSubmit={this.onSubmit}>
-        <input pattern=".{1,}" required ref="todo" type="text" placeholder="Eat a peach..." />
-        <button>Add TODO</button>
-      </form>
-    );
-  }
-});
-
-var TodoAppView = React.createClass({
+var TodoApp = React.createClass({
 
   // Include all of the `*Collection` methods wrapping an instance of the
   // `TODOS` collection.
-  mixins: [ BackboneCollection(Todos) ],
+  mixins: [ BackboneCollection ],
 
   // Set up `this.collection` and return its serialized value as initial state
   getInitialState: function () {
-    this.initializeCollection();
-    return this.serializeCollection();
+    return this.serializeCollection(todoStore);
+  },
+
+  componentDidMount: function () {
+    this.bindCollection(todoStore);
   },
 
   // Retrieve the collection from the server
-  componentDidMount: function () {
-    this.fetchCollection();
+  componentWillUnmount: function () {
+    this.unbindCollection(todoStore);
+  },
+
+  fetchCollection: function () {
+    todoStore.fetch();
   },
 
   todoCreated: function (attrs) {
-    this.collection.create(attrs);
+    todoStore.create(attrs);
+  },
+
+  useFixture: function () {
+    todoStore.useFixture();
   },
 
   render: function () {
     return (
       <div>
-        <TodoListView todos={this.state.collection}></TodoListView>
-        <TodoSubmitView onSubmit={this.todoCreated}></TodoSubmitView>
+        <a href="#" onClick={this.useFixture}>Reset TODOs</a><br />
+        <a href="#" onClick={this.fetchCollection}>Fetch existing TODOs</a>
+        <TodoList todos={this.state.collection}></TodoList>
+        <TodoSubmit onSubmit={this.todoCreated}></TodoSubmit>
       </div>
     );
   }
 });
 
 React.renderComponent(
-  <TodoAppView></TodoAppView>,
+  <TodoApp></TodoApp>,
   document.getElementById('root')
 );
 

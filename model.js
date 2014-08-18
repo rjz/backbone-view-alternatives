@@ -1,22 +1,47 @@
 (function (global, Backbone) {
 
+  var todos = [
+    {
+      "id": 1,
+      "label": "Backbone",
+      "completed": true
+    },
+    {
+      "id": 2,
+      "label": "React",
+      "completed": true
+    },
+    {
+      "id": 3,
+      "label": "Profit"
+    }
+  ];
+
   // A todo model
   var Todo = global.Todo = Backbone.Model.extend({
-    defaults: {
-      label: 'Nothing to do'
-    },
     toJSON: function () {
       return {
-        id    : this.id,
-        label : this.attributes.label
+        id        : this.id,
+        label     : this.attributes.label,
+        completed : this.attributes.completed
       };
     }
   });
 
-  global.Todos = Backbone.Collection.extend({
+  var Todos = global.Todos = Backbone.Collection.extend({
     url: './todos.json',
-    model: Todo
+    model: Todo,
+    localStorage: new Backbone.LocalStorage('todos'),
+    useFixture: function () {
+      this.localStorage._clear();
+      this.reset(todos);
+      this.forEach(function (todo) {
+        todo.save();
+      });
+    }
   });
+
+  global.todoStore = new Todos();
 
 })(this, Backbone);
 

@@ -5,6 +5,7 @@
   },
   {
     "id": 3,
-    "label": "Win, lose or draw"
+    "label": "Win, lose or draw",
+    "completed": true
   }
 ]
