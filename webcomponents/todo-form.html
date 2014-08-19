@@ -11,7 +11,7 @@ var TodoFormProto = Object.create(HTMLFormElement.prototype, {
 });
 
 TodoFormProto.createdCallback = function () {
-  var shadow = this.createShadowRoot();
+  this.shadow = this.createShadowRoot();
 
   this.shadow.innerHTML = [
     '<input pattern=".{1,}" required type="text" placeholder="Eat a peach..." />',
