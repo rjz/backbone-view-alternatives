@@ -1,11 +1,11 @@
 <html>
   <body>
     <script>
-var DemoTodoItemProto = Object.create(HTMLElement.prototype);
+var TodoItemProto = Object.create(HTMLElement.prototype);
 
 // `createdCallback` is called when the custom element is created. We can use
 // it to set up events and build up the shadow DOM
-DemoTodoItemProto.createdCallback = function () {
+TodoItemProto.createdCallback = function () {
 
   // Initialize shadow DOM
   var shadow = this.createShadowRoot();
@@ -44,7 +44,7 @@ DemoTodoItemProto.createdCallback = function () {
 };
 
 // Assign model properties to this view
-DemoTodoItemProto.assign = function (attrs) {
+TodoItemProto.assign = function (attrs) {
 
   // Set the (prefixed) id of the todo item
   this.setAttribute('id', 'todo-' + attrs.id);
@@ -58,10 +58,12 @@ DemoTodoItemProto.assign = function (attrs) {
     this.els.input.setAttribute('disabled', 'disabled');
     this.els.input.setAttribute('checked', 'checked');
   }
+
+  return this;
 };
 
-document.registerElement('demo-todo-item', {
-  prototype: DemoTodoItemProto
+document.registerElement('todo-item', {
+  prototype: TodoItemProto
 });
 
     </script>

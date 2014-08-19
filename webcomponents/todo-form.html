@@ -1,0 +1,33 @@
+<html>
+  <body>
+    <script>
+
+var TodoFormProto = Object.create(HTMLFormElement.prototype, {
+  'label': {
+    get: function () {
+      return this.shadow ? this.shadow.querySelector('input').value : '';
+    }
+  }
+});
+
+TodoFormProto.createdCallback = function () {
+  var shadow = this.createShadowRoot();
+
+  this.shadow.innerHTML = [
+    '<input pattern=".{1,}" required type="text" placeholder="Eat a peach..." />',
+    '<button>Add TODO</button>',
+  ];
+
+  this.shadow.querySelector('button').addEventListener('click', function () {
+    this.dispatchEvent(new CustomEvent('submit'));
+    this.shadow.querySelector('input').value = '';
+  }.bind(this));
+};
+
+document.registerElement('todo-form', {
+  prototype: TodoFormProto
+});
+    </script>
+  </body>
+</html>
+

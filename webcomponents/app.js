@@ -1,31 +1,29 @@
-window.addEventListener('polymer-ready', function(e) {
+window.addEventListener('polymer-ready', function (e) {
 
-  // Create a list element
-  var todoListEl = document.querySelector('demo-todo-list');
+  var todoListEl = document.createElement('todo-list'),
+      todoSubmitEl = document.createElement('todo-form');
 
   // Add models to the list element as they're added to the collection
-  todoStore.on('add', function (m) {
-    todoListEl.add(m.toJSON());
+  todoStore.on('change add remove reset', function (m) {
+    todoListEl.reset(todoStore.toJSON());
   });
 
   // A new todo has been submitted! If it's valid (it is) we can trigger a
   // view update by adding it to the collection
-  todoListEl.addEventListener('itemRequest', function (e) {
-
-    // `create` could be used to persist
-    todoStore.create({ label: e.detail.label });
+  todoSubmitEl.addEventListener('submit', function (e) {
+    todoStore.create({ label: e.target.label });
   });
 
   // A todo has been completed! The view is already updated to reflect this;
-  // we simply need to `remove` the model from the collection.
+  // we just need to update its `completed` status.
   todoListEl.addEventListener('completed', function (e) {
-    var modelId = e.detail.id;
-
-    // find the model by the event id
-    todoStore.get(modelId).save({ completed: true });
+    todoStore.get(e.detail.id).save({ completed: true });
   });
 
-  todoStore.fetch();
+  // Create a list element
+  document.body.appendChild(todoListEl);
+  document.body.appendChild(todoSubmitEl);
 
+  todoStore.fetch();
 });
 
