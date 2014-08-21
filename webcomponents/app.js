@@ -11,7 +11,7 @@ window.addEventListener('polymer-ready', function (e) {
   // A new todo has been submitted! If it's valid (it is) we can trigger a
   // view update by adding it to the collection
   todoSubmitEl.addEventListener('submit', function (e) {
-    todoStore.create({ label: e.target.label });
+    todoStore.create(e.detail);
   });
 
   // A todo has been completed! The view is already updated to reflect this;

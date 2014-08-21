@@ -2,25 +2,29 @@
   <body>
     <script>
 
-var TodoFormProto = Object.create(HTMLFormElement.prototype, {
-  'label': {
-    get: function () {
-      return this.shadow ? this.shadow.querySelector('input').value : '';
-    }
-  }
-});
+var TodoFormProto = Object.create(HTMLFormElement.prototype);
 
 TodoFormProto.createdCallback = function () {
-  this.shadow = this.createShadowRoot();
 
-  this.shadow.innerHTML = [
-    '<input pattern=".{1,}" required type="text" placeholder="Eat a peach..." />',
-    '<button>Add TODO</button>',
-  ];
+  var shadow = this.createShadowRoot();
+  var button = document.createElement('button');
+  var input  = document.createElement('input');
 
-  this.shadow.querySelector('button').addEventListener('click', function () {
-    this.dispatchEvent(new CustomEvent('submit'));
-    this.shadow.querySelector('input').value = '';
+  input.setAttribute('type', 'text');
+  input.setAttribute('placeholder', 'Eat a peach');
+
+  button.textContent = 'Add TODO';
+
+  shadow.appendChild(input);
+  shadow.appendChild(button);
+
+  button.addEventListener('click', function () {
+    this.dispatchEvent(new CustomEvent('submit', {
+      detail: {
+        label: input.value
+      }
+    }));
+    input.value = '';
   }.bind(this));
 };
 

@@ -2,36 +2,26 @@
   <body>
     <script>
 
-var TodoListProto = Object.create(HTMLElement.prototype);
+var TodoListProto = Object.create(HTMLUListElement.prototype);
 
 TodoListProto.empty = function () {
-  while (this.list && this.list.hasChildNodes()) {
-    this.list.removeChild(this.list.lastChild);
+  while (this.hasChildNodes()) {
+    this.removeChild(this.lastChild);
   }
 };
 
 TodoListProto.addItem = function (attrs) {
-  var item;
-  if (this.list) {
-    item = document.createElement('todo-item').assign(attrs);
-    this.list.appendChild(item);
-  }
+  var item = document.createElement('todo-item');
+  Object.keys(attrs).forEach(function (key) {
+    item.setAttribute(key, attrs[key]);
+  });
+  this.appendChild(item);
 };
 
 // Add an item to the todo list
 TodoListProto.reset = function (models) {
-  if (this.list) {
-    this.empty();
-    models.forEach(this.addItem.bind(this));
-  }
-};
-
-// `createdCallback` is called when the custom element is created. We can use
-// it to set up events and build up the shadow DOM
-TodoListProto.createdCallback = function () {
-  var shadow = this.createShadowRoot();
-  this.list = document.createElement('ul');
-  shadow.appendChild(this.list);
+  this.empty();
+  models.forEach(this.addItem.bind(this));
 };
 
 document.registerElement('todo-list', {
