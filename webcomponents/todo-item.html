@@ -3,6 +3,13 @@
     <script>
 var TodoItemProto = Object.create(HTMLLIElement.prototype);
 
+var uniqueId = (function () {
+  var i = 0;
+  return function () {
+    return 'todo-' + ++i;
+  };
+})();
+
 // `createdCallback` is called when the custom element is created. We can use
 // it to set up events and build up the shadow DOM
 TodoItemProto.createdCallback = function () {
@@ -13,7 +20,7 @@ TodoItemProto.createdCallback = function () {
   var input = document.createElement('input');
   var label = document.createElement('label');
 
-  var id = 'todo-1';
+  var id = uniqueId();
 
   input.setAttribute('type', 'checkbox');
   input.setAttribute('id', id);
@@ -21,12 +28,7 @@ TodoItemProto.createdCallback = function () {
 
   input.addEventListener('change', function (e) {
     if (input.checked) {
-      this.setAttribute('completed', true);
-      this.dispatchEvent(new CustomEvent('completed', {
-        detail: {
-          id: this.getAttribute('id').split('todo-').pop()
-        }
-      }));
+      this.setAttribute('completed', 'true');
     }
   }.bind(this));
 
@@ -36,21 +38,19 @@ TodoItemProto.createdCallback = function () {
 };
 
 TodoItemProto.attributeChangedCallback = function (key) {
-  var $ = this.shadow.querySelector;
-  switch (key) {
-    case 'id':
-      this.id = this.getAttribute('id');
-      break;
+  var input = this.shadow.querySelector('input');
+  var label = this.shadow.querySelector('label');
 
+  switch (key) {
     case 'completed':
       if (this.getAttribute('completed') === 'true') {
-        this.shadow.querySelector('input').setAttribute('disabled', 'disabled');
-        this.shadow.querySelector('input').setAttribute('checked', 'checked');
+        input.setAttribute('disabled', 'disabled');
+        input.setAttribute('checked', 'checked');
       }
       break;
 
     case 'label':
-      this.shadow.querySelector('label').textContent = this.getAttribute('label');
+      label.textContent = this.getAttribute('label');
       break;
   }
 };

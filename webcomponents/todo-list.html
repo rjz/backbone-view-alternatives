@@ -12,9 +12,16 @@ TodoListProto.empty = function () {
 
 TodoListProto.addItem = function (attrs) {
   var item = document.createElement('todo-item');
+
   Object.keys(attrs).forEach(function (key) {
     item.setAttribute(key, attrs[key]);
   });
+
+  this.o.observe(item, {
+    attributesChanged: true,
+    attributeFilter: ['completed']
+  });
+
   this.appendChild(item);
 };
 
@@ -22,6 +29,23 @@ TodoListProto.addItem = function (attrs) {
 TodoListProto.reset = function (models) {
   this.empty();
   models.forEach(this.addItem.bind(this));
+};
+
+TodoListProto.attachedCallback = function () {
+  this.o = new MutationObserver(function (mutations) {
+    mutations.forEach(function (m) {
+      var item = m.target;
+      if (item.getAttribute('completed') === 'true') {
+        this.dispatchEvent(new CustomEvent('completed', {
+          detail: item
+        }));
+      }
+    }.bind(this));
+  }.bind(this));
+};
+
+TodoListProto.detachedCallback = function () {
+  this.o.disconnect();
 };
 
 document.registerElement('todo-list', {

@@ -3,6 +3,12 @@ window.addEventListener('polymer-ready', function (e) {
   var todoListEl = document.createElement('todo-list'),
       todoSubmitEl = document.createElement('todo-form');
 
+  var o = new MutationObserver(function (mutations) {
+    mutations.forEach(function (mutation) {
+      console.log(mutation);
+    });
+  });
+
   // Add models to the list element as they're added to the collection
   todoStore.on('change add remove reset', function (m) {
     todoListEl.reset(todoStore.toJSON());
