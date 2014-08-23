@@ -9,14 +9,18 @@ TodoFormProto.createdCallback = function () {
   var shadow = this.createShadowRoot();
   var button = document.createElement('button');
   var input  = document.createElement('input');
+  var link  = document.createElement('a');
 
   input.setAttribute('type', 'text');
   input.setAttribute('placeholder', 'Eat a peach');
 
   button.textContent = 'Add TODO';
 
+  link.textContent = 'Clear completed'
+
   shadow.appendChild(input);
   shadow.appendChild(button);
+  shadow.appendChild(link);
 
   button.addEventListener('click', function () {
     this.dispatchEvent(new CustomEvent('submit', {
@@ -26,6 +30,10 @@ TodoFormProto.createdCallback = function () {
     }));
     input.value = '';
   }.bind(this));
+
+  link.addEventListener('click', function () {
+    this.dispatchEvent(new CustomEvent('clearSelected'));
+  });
 };
 
 document.registerElement('todo-form', {

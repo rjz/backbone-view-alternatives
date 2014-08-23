@@ -20,6 +20,14 @@ window.addEventListener('polymer-ready', function (e) {
     todoStore.create(e.detail);
   });
 
+  // Clear all completed todos
+  todoSubmitEl.addEventListener('clearSelected', function (e) {
+    var completed = todoStore.where({ completed: true });
+    completed.forEach(function (model) {
+      model.destroy();
+    });
+  });
+
   // A todo has been completed! The view is already updated to reflect this;
   // we just need to update its `completed` status.
   todoListEl.addEventListener('completed', function (e) {
@@ -27,8 +35,8 @@ window.addEventListener('polymer-ready', function (e) {
   });
 
   // Create a list element
-  document.body.appendChild(todoListEl);
   document.body.appendChild(todoSubmitEl);
+  document.body.appendChild(todoListEl);
 
   todoStore.fetch();
 });
