@@ -4,19 +4,17 @@ body {
   font-family: 'Questrial', sans-serif;
 }
 
-demo-todo-list {
+todo-list {
   display:block;
 }
 
-demo-todo-list::shadow demo-todo-item {
+todo-list todo-item {
   display: list-item;
+  font-size: 23px;
+  line-height: 1.4em;
 }
 
-demo-todo-list::shadow demo-todo-item::shadow input:disabled {
-  border: 1px solid red;
-}
-
-demo-todo-list::shadow demo-todo-item::shadow input:disabled + label {
+todo-list todo-item::shadow input:disabled + label {
   text-decoration: line-through;
 }
 
